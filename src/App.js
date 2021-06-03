@@ -2,7 +2,21 @@ import React, { useState, useEffect } from 'react';
 import './App.css';
 import Box from "@material-ui/core/Box"
 import Button from "@material-ui/core/Button"
-import Grid from  "@material-ui/core/Grid"
+import Grid from "@material-ui/core/Grid"
+import Paper from "@material-ui/core/Paper"
+import { makeStyles } from '@material-ui/core/styles';
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    '& > *': {
+      margin: theme.spacing(1),
+      width: theme.spacing(16),
+      height: theme.spacing(16),
+    },
+  },
+}));
 
 class JButton extends React.Component {
   render() {
@@ -14,9 +28,29 @@ class JButton extends React.Component {
   }
 }
 
+function JPaper(props) {
+  const classes = useStyles();
+  return (
+    <div className={classes.root}>
+      <Paper {...props}>
+        {props.children}
+      </Paper>
+    </div>
+  )
+}
+
 function Elem(objs) {
-  if(objs){
-    return objs.map((obj) => <MyComponent {...obj} />);    
+  console.log(typeof objs);
+
+  if (typeof objs === "string" || typeof objs === "number") {
+    return objs
+  }
+  if (objs == null) {
+    return (<p>loading...</p>)
+  }
+
+  if (objs) {
+    return objs.map((obj, index) => <MyComponent {...obj} key={index} />);
   }
   return (<p>loading...</p>)
 }
@@ -24,31 +58,39 @@ function Elem(objs) {
 class MyComponent extends React.Component {
 
   components = {
+    jdev: Box,
     jbox: Box,
     jbutton: JButton,
-    jgrid: Grid
+    jgrid: Grid,
+    jpaper: JPaper
   };
 
   render() {
     const TagName = this.components[this.props.tag || 'jbutton'];
-    return (<TagName  {...this.props.attr} key={this.props.key}>{this.props.children ? Elem(this.props.children ) : ''}</TagName>)
+    return (<TagName  {...this.props.attr} >{this.props.children ? Elem(this.props.children) : ''}</TagName>)
   }
 }
 
 
 function App() {
 
-  const [data, setData] = useState(0);
+  const [data, setData] = useState(null);
+  const [header, setHeader] = useState(null);
 
   useEffect(() => {
     fetch('/time').then(res => res.json()).then(data => {
       console.log(data);
       setData(data);
     });
+    fetch('/ui/header').then(res => res.json()).then(header => {
+      console.log(header);
+      setHeader(header);
+    });
   }, []);
 
   return (
     <>
+      {Elem(header)}
       {Elem(data)}
     </>
   );
