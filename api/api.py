@@ -9,7 +9,7 @@ class BasicElemen:
     
     def __init__(self, tag, attr = {}) -> None:
         self.tag = tag
-        self.attr = {}
+        self.attr = attr
         self.children = []
         self.key = "key-12sd"
 
@@ -36,6 +36,15 @@ class JPaper(BasicElemen):
         super().__init__('jpaper')
 
 
+class JBox(BasicElemen):
+    def __init__(self) -> None:
+        super().__init__('jbox')
+
+class NavBar(BasicElemen):
+    def __init__(self, title="title") -> None:
+        super().__init__('navbar', attr={"title": title})
+
+
 @app.route('/time')
 def get_current_time():
     elements = []
@@ -48,8 +57,14 @@ def get_current_time():
 @app.route('/ui/header')
 def get_ui_header():
     elements = []
-    paper = JPaper()
-    paper.addChildren('Header')
-    elements.append(paper.__dict__)
+    # paper = JPaper()
+    # paper.addChildren('Header')
+    # elements.append(paper.__dict__)
+    # print(elements)
+    # box = JBox()
+    # box.addChildren(JButton(label="1").__dict__)
+    # box.addChildren(JButton(label="2").__dict__)
+    # box.addChildren(JButton(label="3").__dict__)
+    elements.append(NavBar("Ericson").__dict__)
     print(elements)
     return jsonify(elements)

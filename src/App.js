@@ -5,6 +5,21 @@ import Button from "@material-ui/core/Button"
 import Grid from "@material-ui/core/Grid"
 import Paper from "@material-ui/core/Paper"
 import { makeStyles } from '@material-ui/core/styles';
+import { css } from 'glamor'
+
+let container = css({
+  display: 'flex'
+})
+
+function NavBar(props) {
+   return (
+     <Box {...container} >
+        <Box >
+          {props.title}
+        </Box>
+     </Box>
+   )
+}
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -39,6 +54,14 @@ function JPaper(props) {
   )
 }
 
+function JBox(props) {
+  return (
+    <Box>
+      {props.children}
+    </Box>
+  )
+}
+
 function Elem(objs) {
   console.log(typeof objs);
 
@@ -59,10 +82,11 @@ class MyComponent extends React.Component {
 
   components = {
     jdev: Box,
-    jbox: Box,
+    jbox: JBox,
     jbutton: JButton,
     jgrid: Grid,
-    jpaper: JPaper
+    jpaper: JPaper,
+    navbar: NavBar
   };
 
   render() {
